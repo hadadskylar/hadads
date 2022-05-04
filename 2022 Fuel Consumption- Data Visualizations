@@ -1,0 +1,162 @@
+---
+title: "CIG Final Assignment"
+author: "Skylar Hadad"
+date: "4/27/2022"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(janitor)
+library(tinytex)
+
+library(readr) #this library reads .csv files. 
+library(readxl) #this library reads Excel files
+library(rvest) 
+library(mosaic)
+library(mdsr)
+library(mosaicData)
+library(dplyr)
+library(ggplot2)
+library(rpart)
+library(rpart.plot)
+library(ISLR)
+library(NHANES)
+library(partykit)
+library(mlbench)
+library(tibble)
+library(tidyr)
+library(lessR)
+library(e1071)
+
+library(tidyverse)
+library(lubridate)
+library(ggthemes)
+library(leaflet)
+library(scales)
+library(gridExtra)
+```
+
+
+
+
+```{r}
+print(getwd())
+```
+
+
+```{r}
+Fuel <- read.csv("MY2022 Fuel Consumption Ratings.csv", header = TRUE)
+head(Fuel)
+```
+```{r}
+NROW(Fuel)
+ncol(Fuel)
+```
+
+```{r}
+glimpse(Fuel)
+```
+
+```{r}
+msummary(Fuel)
+```
+
+```{r}
+Fueldata <- Fuel %>% drop_na()
+glimpse(Fueldata)
+```
+
+```{r}
+p1 <- ggplot(Fueldata, aes(x=Cylinders,y=CO2.Rating))
+```
+
+
+```{r}
+p1 + labs(x = "Cylinders",
+               y = "CO2 Rating",
+               title = "Number of Cylinders vs. CO2 Rating (1 worst -10 best)",
+               subtitle = "Created for Data Visualization Class")+
+  geom_point(color = 'blue')
+
+```
+```{r}
+p2 <- ggplot(Fueldata, aes(x= CO2.Emissions.g.km.,y= Make, color = Vehicle.Class)) + 
+  geom_point()+
+  geom_smooth(method="lm",se=FALSE) +
+  labs(x = "CO2 Emissions (grams per km)",
+               y = "Make of Vehicles",
+               title = "CO2 Emissions vs Make vs Vehicle Class",
+               subtitle = "Created for Data Vis Class")
+p2
+```
+
+
+
+```{r}
+library(scales)
+p3 <- ggplot(Fueldata, aes(x= CO2.Emissions.g.km.,y= Make, color = CO2.Emissions.g.km.)) + 
+  geom_point()
+p3
+```
+
+``` {r}
+
+p4 <- ggplot(data = Fueldata) + 
+  geom_smooth(mapping = aes(x = CO2.Emissions.g.km., y = Fuel.Consumption.Comb..mpg.. )) +
+  labs(x = "CO2 Emissions (grams per km)",
+               y = "Fuel Consumptions (mpg)",
+               title = "CO2 Emissions vs Fuel Consumption (mpg)")
+p4
+```
+`
+```{r}
+p5 <- ggplot(data = Fueldata, mapping = aes(x = Fuel.Consumption.Comb..mpg.., y = CO2.Rating )) + 
+  geom_point(mapping = aes(color = Vehicle.Class)) + 
+  geom_smooth() + labs(x = "Fuel Consumption (mpg)",
+               y = "CO2 Ratings (1-10)",
+               title = "Fuel Consumption vs. CO2 Ratings",
+               subtitle = "CO2 Ratings from worst(1) to best(10) and Fuel Consumption in Miles per Gallon")
+p5
+```
+```{r}
+p6 <- ggplot(data = Fueldata) +
+  geom_smooth(
+    mapping = aes(x = Fuel.Consumption.Comb..mpg.., y = CO2.Rating, color = Vehicle.Class),
+    show.legend = FALSE
+  ) + labs(x = "Fuel Consumption (mpg)",
+               y = "CO2 Ratings (1-10)",
+               title = "Fuel Consumption vs. CO2 Ratings",
+               subtitle = "CO2 Ratings from worst(1) to best(10) and Color coordinated by vehicle class")
+p6
+```
+```{r}
+library(hrbrthemes)
+library(ggthemes)
+library(viridis)
+```
+
+
+
+
+```{r}
+p7<- ggplot(data = Fueldata) + 
+  geom_point(mapping = aes(x = CO2.Rating, y = Fuel.Consumption.Comb..mpg..)) + 
+  facet_wrap(~ Make, nrow = 2)+
+   scale_color_viridis()+ 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  theme_igray()+
+  labs(x = "CO2 Ratings, y = Fuel Consumption",
+             title = "CO2 Ratings vs Fuel Consumption (mpg)",
+               subtitle = "Uses Make or Manufacturer as facet",
+               caption = "CO2 Ratings from 1(best) to 10(worst)")
+p7
+```
